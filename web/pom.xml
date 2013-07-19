@@ -19,8 +19,8 @@
     <version.maven.build_helper_plugin>1.5</version.maven.build_helper_plugin>
 
     <!-- Dependencies versions -->
-    <version.arquillian_drone>1.1.1.Final</version.arquillian_drone>
-    <version.arquillian_warp>1.0.0.Alpha2</version.arquillian_warp>
+    <version.arquillian_drone>1.2.0.Alpha2</version.arquillian_drone>
+    <version.arquillian_warp>1.0.0.Alpha3</version.arquillian_warp>
 
     <version.selenium>2.31.0</version.selenium>
     <version.selenium.server>2.31.0</version.selenium.server>
@@ -96,7 +96,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
       <dependency>
         <groupId>org.jboss.arquillian.extension</groupId>
         <artifactId>arquillian-drone-bom</artifactId>
@@ -104,7 +103,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
 

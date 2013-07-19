@@ -13,8 +13,9 @@ import org.arquillian.example.stub.SkeletonBeerRepository;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.Resolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
+import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 
 public class Deployments
 {
@@ -29,9 +30,8 @@ public class Deployments
     */
    public static WebArchive createSkeleton()
    {
-      final MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class)
-                                                                  .loadMetadataFromPom("pom.xml")
-                                                                  .goOffline();
+      final MavenResolverSystem resolverSystem = Resolvers.use(MavenResolverSystem.class);
+      PomEquippedResolveStage resolver = resolverSystem.loadPomFromFile("pom.xml");
 
       return addWebResourcesTo(ShrinkWrap.create(WebArchive.class, "beer-advisor-drone.war"))
             .addPackages(true, Beer.class.getPackage(),
@@ -41,7 +41,7 @@ public class Deployments
                   BeerRepository.class.getPackage())
             .addPackages(true, SkeletonBeerRepository.class.getPackage()) // Repository stub
             .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-            .addAsLibraries(resolver.artifact("com.google.guava:guava").resolveAsFiles());
+            .addAsLibraries(resolver.resolve("com.google.guava:guava").withTransitivity().asFile());
    }
 
    /**
@@ -49,9 +49,8 @@ public class Deployments
     */
    public static WebArchive create()
    {
-      final MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class)
-                                                                     .loadMetadataFromPom("pom.xml")
-                                                                     .goOffline();
+	   final MavenResolverSystem resolverSystem = Resolvers.use(MavenResolverSystem.class);
+	      PomEquippedResolveStage resolver = resolverSystem.loadPomFromFile("pom.xml");
 
       return addWebResourcesTo(ShrinkWrap.create(WebArchive.class, "beer-advisor-drone.war"))
             .addPackages(true, Beer.class.getPackage(),
@@ -60,8 +59,8 @@ public class Deployments
                                BeerAdvisorController.class.getPackage())
             .addPackages(true, BeerRepository.class.getPackage())
             .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
-            .addAsLibraries(resolver.artifacts("com.google.guava:guava",
-                                               "com.google.code.gson:gson").resolveAsFiles());
+            .addAsLibraries(resolver.resolve("com.google.guava:guava",
+                                               "com.google.code.gson:gson").withTransitivity().asFile());
    }
 
    private static WebArchive addWebResourcesTo(WebArchive archive)
